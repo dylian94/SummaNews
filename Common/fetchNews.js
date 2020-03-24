@@ -2,7 +2,7 @@ export default async function fetchNews(query) {
     // TODO: Vraag een API-sleutel aan bij Microsoft, zie Readme.md
     const apiKey = 'zet-je-api-sleutel-hier';
 
-    const baseUrl = 'https://summanews.cognitiveservices.azure.com/bing/v7.0';
+    const baseUrl = 'https://api.cognitive.microsoft.com/bing/v7.0';
     const endpoint = '/news/search';
     const encodedQuery = encodeURIComponent('"Summa College "' + (query != null ? query : ''));
     const url = baseUrl + endpoint + '?q=' + encodedQuery;
@@ -15,15 +15,21 @@ export default async function fetchNews(query) {
         }
     };
 
-    let response = await fetch(url, init);
-    let result = await response.json();
+    let data = [];
 
-    if(result._type === 'News')
+    try
     {
-        return result.value;
+        let response = await fetch(url, init);
+        let result = await response.json();
+
+        if(result._type === 'News')
+        {
+            data = result.value;
+        }
     }
-    else
-    {
-        return [];
+    catch (err) {
+        alert('Er is een fout opgetreden: \r\n' + err);
     }
+
+    return data;
 }
